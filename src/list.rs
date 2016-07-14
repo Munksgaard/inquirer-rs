@@ -1,4 +1,5 @@
 use std::io::{Write, stdout, stdin};
+use std::process;
 use termion::{TermRead, TermWrite, IntoRawMode, color, Style, Key};
 
 use choice::Choice;
@@ -57,7 +58,9 @@ pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error> wh
                 cur += 1;
             }
             Key::Ctrl('c') => {
-                panic!("Ctrl-C");
+                try!(stdout.show_cursor());
+                println!("\n\rPressed Ctrl-C, exiting");
+                process::exit(1);
             }
             _ => {
                 // pass
