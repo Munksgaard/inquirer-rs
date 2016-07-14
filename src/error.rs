@@ -29,5 +29,9 @@ quick_error! {
         NoMoreInput {
             display("Didn't get any more input")
         }
+        /// User pressed Ctrl-C
+        UserAborted {
+            display("User aborted (pressed Ctrl-C)")
+        }
     }
 }
