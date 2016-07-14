@@ -1,9 +1,14 @@
 extern crate inquirer;
 
-use inquirer::simple_list;
+use inquirer::list;
 
 fn main() {
-    let choices =  &["An option", "Another option", "Something else?"];
-    let result = simple_list("Choose an option:", choices);
-    println!("You chose {}.", result);
+    let choices: Vec<_> = vec!["An option", "Another option", "Something else?"].into_iter()
+        .enumerate()
+        .map(|(index, item)| (item, index))
+        .collect();
+
+    let result = list("Choose an option:", &choices).unwrap();
+
+    println!("You chose {:?}.", result);
 }

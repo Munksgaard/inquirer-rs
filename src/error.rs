@@ -1,0 +1,33 @@
+use std::io;
+
+quick_error! {
+    /// Inquirer Error
+    #[derive(Debug)]
+    pub enum Error {
+        /// Error while dealing with file or stdin/stdout
+        Io(err: io::Error) {
+            from()
+            cause(err)
+            display("I/O error")
+            description(err.description())
+        }
+        /// Input read error
+        // `std::io::CharsError` is unstable!
+        Chars(err: io::CharsError) {
+            from()
+            cause(err)
+            display("Chars error")
+            description(err.description())
+        }
+        /// Invalid choice
+        // TODO: Make this a type system error instead
+        InvalidChoice(option_num: usize) {
+            display("Option `{}` is not valid", option_num)
+            description("Invalid choice")
+        }
+        /// No more input
+        NoMoreInput {
+            display("Didn't get any more input")
+        }
+    }
+}

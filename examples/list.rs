@@ -4,6 +4,6 @@ use inquirer::list;
 
 fn main() {
     let choices =  &[("An option", 42), ("Another option", 13), ("Something else?", 24)];
-    let result = list("Choose an option:", choices);
-    println!("You chose {}.", result);
+    let result = list("Choose an option:", choices).unwrap();
+    println!("You chose {:?}.", result);
 }
