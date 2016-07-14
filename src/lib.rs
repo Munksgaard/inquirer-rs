@@ -1,6 +1,7 @@
 //! Inquirer – Fancy user interaction on the command line
 
-// Termion depends on nighty (for Keys), we need this for the unstable `std::io::CharsError` 
+// Termion depends on nightly (for `Keys`), we need this for the unstable
+// `std::io::CharsError`
 #![feature(io)]
 
 #![deny(missing_docs,
