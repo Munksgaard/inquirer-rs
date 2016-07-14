@@ -2,9 +2,8 @@ extern crate termion;
 
 use termion::{TermRead, TermWrite, IntoRawMode, color, Style, Key};
 use std::io::{Write, stdout, stdin};
-use std::fmt::Display;
 
-pub fn list<'a, T, S: Display>(prompt: &str, choices: &'a [(S, T)]) -> &'a T {
+pub fn simple_list(prompt: &str, choices: &[&str]) -> usize {
     let stdin = stdin();
     let mut stdout = stdout().into_raw_mode().unwrap();
     stdout.hide_cursor().unwrap();
@@ -24,7 +23,7 @@ pub fn list<'a, T, S: Display>(prompt: &str, choices: &'a [(S, T)]) -> &'a T {
 
     loop {
         stdout.move_cursor_up(choices.len() as u32).unwrap();
-        for (i, &(ref s, _)) in choices.iter().enumerate() {
+        for (i, s) in choices.iter().enumerate() {
             if cur == i {
                 print!("\n\r");
                 stdout.clear_line().unwrap();
@@ -61,5 +60,12 @@ pub fn list<'a, T, S: Display>(prompt: &str, choices: &'a [(S, T)]) -> &'a T {
 
     print!("\n\r");
     stdout.show_cursor().unwrap();
-    &choices[cur].1
+    cur
+}
+
+pub fn list<'a, T>(prompt: &str, choice_pairs: &'a [(&str, T)]) -> &'a T {
+    let choices: Vec<&str> = choice_pairs.iter().map(|&(s, _)| s).collect();
+    let choice = simple_list(prompt, &choices);
+
+    &choice_pairs[choice].1
 }
