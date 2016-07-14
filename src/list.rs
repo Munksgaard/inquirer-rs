@@ -117,9 +117,7 @@ pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error> wh
     print!("\n\r");
     try!(stdout.show_cursor());
 
-    choices
-        .iter()
-        .nth(cur)
+    choices.get(cur)
         .ok_or_else(|| Error::InvalidChoice(cur))
         .map(|choice| choice.value())
 }
