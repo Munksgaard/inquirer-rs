@@ -5,6 +5,53 @@ use choice::Choice;
 use error::Error;
 
 /// Render a list the user can select one value from
+///
+/// The return type is a `Result` that contains either a reference to the value
+/// of the selected choice or a custom error. **Please note:** If the user
+/// presses <kbd>Ctrl</kbd><kbd>C</kbd>, this will result in an `UserAborted`
+/// error that the application should handle.
+///
+/// # Examples
+///
+/// Simple example, using only string slices for options.
+///
+/// ```rust,no_run
+/// extern crate inquirer;
+///
+/// let choices =  &["An option", "Another option", "Something else?"];
+/// let result = inquirer::list("Choose an option:", choices).unwrap();
+/// ```
+///
+/// After choosing the first option, `result` will be `"An option"`.
+///
+/// ## Complex types
+///
+/// You can also use tuples for options, where the first item is printed to the
+/// screen, but the second item is returned as the value of the selection.
+///
+/// ```rust,no_run
+/// # extern crate inquirer;
+/// let choices =  &[("Alpha", "α"), ("Beta", "β"), ("Gamma", "γ")];
+/// let result = inquirer::list("Choose an option:", choices).unwrap();
+/// ```
+///
+/// Here, `result` will be `"α"` when you select the first option.
+///
+/// ## Error Handling
+///
+/// ```rust,no_run
+/// # extern crate inquirer;
+/// let choices =  &[("Yes!", 1), ("No!", -1), ("Maybe?", 0)];
+///
+/// match inquirer::list("Choose an option:", choices) {
+///     Ok(result) => println!("You chose {:?}.", result),
+///     Err(inquirer::Error::UserAborted) => {
+///         println!("Pressed Ctrl-C, exiting.");
+///         std::process::exit(1);
+///     }
+///     Err(err) => println!("{:?}", err)
+/// }
+/// ```
 pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error> where
     C: Choice<Value=V>
 {
@@ -57,7 +104,9 @@ pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error> wh
                 cur += 1;
             }
             Key::Ctrl('c') => {
-                panic!("Ctrl-C");
+                print!("\n\r");
+                try!(stdout.show_cursor());
+                return Err(Error::UserAborted);
             }
             _ => {
                 // pass
@@ -68,9 +117,7 @@ pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error> wh
     print!("\n\r");
     try!(stdout.show_cursor());
 
-    choices
-        .iter()
-        .nth(cur)
+    choices.get(cur)
         .ok_or_else(|| Error::InvalidChoice(cur))
         .map(|choice| choice.value())
 }
