@@ -2,6 +2,9 @@
 name = "inquirer"
 version = "0.1.0"
 authors = ["Philip Munksgaard <pmunksgaard@gmail.com>"]
+repository = "https://github.com/Munksgaard/inquirer-rs"
+license = "MIT"
+readme = "README.md"
 
 [dependencies]
 quick-error = "1.1.0"
