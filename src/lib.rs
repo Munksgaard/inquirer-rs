@@ -15,7 +15,9 @@ extern crate termion;
 mod choice;
 mod error;
 mod list;
+mod confirm;
 
 pub use choice::Choice;
 pub use error::Error;
 pub use list::list;
+pub use confirm::confirm;
