@@ -10,7 +10,8 @@
     unused_import_braces, unused_qualifications)]
 
 extern crate termion;
-#[macro_use] extern crate quick_error;
+#[macro_use]
+extern crate quick_error;
 
 mod choice;
 mod error;

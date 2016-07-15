@@ -30,8 +30,8 @@ impl<'a> Choice for &'a str {
     }
 }
 
-impl<'a, T, V> Choice for (T, V) where
-    T: Display
+impl<'a, T, V> Choice for (T, V)
+    where T: Display
 {
     type Text = T;
     type Value = V;

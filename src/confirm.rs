@@ -37,7 +37,11 @@ pub fn confirm(prompt: &str, default: bool) -> Result<bool, Error> {
     print!("[?] ");
     try!(stdout.reset());
     print!("{} ", prompt);
-    let (y, n) = if default { ('Y', 'n') } else { ('y', 'N') };
+    let (y, n) = if default {
+        ('Y', 'n')
+    } else {
+        ('y', 'N')
+    };
     print!("({}/{}) ", y, n);
 
     try!(stdout.lock().flush());

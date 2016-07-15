@@ -52,8 +52,8 @@ use error::Error;
 ///     Err(err) => println!("{:?}", err)
 /// }
 /// ```
-pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error> where
-    C: Choice<Value=V>
+pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error>
+    where C: Choice<Value = V>
 {
     let stdin = stdin();
     let mut stdout = try!(stdout().into_raw_mode());
@@ -93,7 +93,8 @@ pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error> wh
         let next = try!(input.next().ok_or_else(|| Error::NoMoreInput));
 
         match try!(next) {
-            Key::Char('\n') => { // Enter
+            Key::Char('\n') => {
+                // Enter
                 break;
             }
             Key::Up if cur != 0 => {
