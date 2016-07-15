@@ -93,8 +93,7 @@ pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error> wh
         let next = try!(input.next().ok_or_else(|| Error::NoMoreInput));
 
         match try!(next) {
-            // newline
-            Key::Char('\n') => {
+            Key::Char('\n') => { // Enter
                 break;
             }
             Key::Up if cur != 0 => {
