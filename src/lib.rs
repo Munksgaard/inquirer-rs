@@ -17,8 +17,10 @@ mod choice;
 mod error;
 mod list;
 mod confirm;
+mod checkbox;
 
 pub use choice::Choice;
 pub use error::Error;
 pub use list::list;
 pub use confirm::confirm;
+pub use checkbox::checkbox;
