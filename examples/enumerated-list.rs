@@ -3,7 +3,7 @@ extern crate inquirer;
 use inquirer::list;
 
 fn main() {
-    let choices: Vec<_> = vec!["An option", "Another option", "Something else?"].into_iter()
+    let choices: Vec<_> = vec!["Red", "Blue", "Green"].into_iter()
         .enumerate()
         .map(|(index, item)| (item, index))
         .collect();

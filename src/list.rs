@@ -18,11 +18,11 @@ use error::Error;
 /// ```rust,no_run
 /// extern crate inquirer;
 ///
-/// let choices =  &["An option", "Another option", "Something else?"];
-/// let result = inquirer::list("Choose an option:", choices).unwrap();
+/// let choices =  &["Red", "Blue", "Green"];
+/// let result = inquirer::list("Chose your favorite color:", choices).unwrap();
 /// ```
 ///
-/// After choosing the first option, `result` will be `"An option"`.
+/// After choosing the first option, `result` will be `"Red"`.
 ///
 /// ## Complex types
 ///
@@ -31,19 +31,20 @@ use error::Error;
 ///
 /// ```rust,no_run
 /// # extern crate inquirer;
-/// let choices =  &[("Alpha", "α"), ("Beta", "β"), ("Gamma", "γ")];
-/// let result = inquirer::list("Choose an option:", choices).unwrap();
+/// enum Color { Red, Blue, Green };
+/// let choices = &[("Red", Color::Red), ("Blue", Color::Blue), ("Green", Color::Green)];
+/// let result = inquirer::list("Chose your favorite color:", choices).unwrap();
 /// ```
 ///
-/// Here, `result` will be `"α"` when you select the first option.
+/// Here, `result` will be `Red` when you select the first option.
 ///
 /// ## Error Handling
 ///
 /// ```rust,no_run
 /// # extern crate inquirer;
-/// let choices =  &[("Yes!", 1), ("No!", -1), ("Maybe?", 0)];
+/// let choices =  &["Red", "Blue", "Green"];
 ///
-/// match inquirer::list("Choose an option:", choices) {
+/// match inquirer::list("Choose your favorite color:", choices) {
 ///     Ok(result) => println!("You chose {:?}.", result),
 ///     Err(inquirer::Error::UserAborted) => {
 ///         println!("Pressed Ctrl-C, exiting.");
