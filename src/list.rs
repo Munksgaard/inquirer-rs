@@ -76,15 +76,14 @@ pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error>
     loop {
         try!(stdout.move_cursor_up(choices.len() as u32));
         for (i, s) in choices.iter().enumerate() {
+            print!("\n\r");
+            try!(stdout.clear_line());
+
             if cur == i {
-                print!("\n\r");
-                try!(stdout.clear_line());
                 try!(stdout.style(Style::Bold));
                 print!("  > {}", s.text());
                 try!(stdout.reset());
             } else {
-                print!("\n\r");
-                try!(stdout.clear_line());
                 print!("    {}", s.text());
             }
         }
