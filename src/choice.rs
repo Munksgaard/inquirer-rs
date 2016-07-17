@@ -26,7 +26,7 @@ impl<'a> Choice for &'a str {
     }
 
     fn value(&self) -> &Self::Value {
-        &self
+        self
     }
 }
 
