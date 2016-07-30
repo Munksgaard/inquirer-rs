@@ -1,5 +1,7 @@
 use std::io::{Write, stdout, stdin};
-use termion::{TermRead, TermWrite, color};
+
+use termion::input::TermRead;
+use termion::{color, style};
 
 use error::Error;
 
@@ -31,10 +33,7 @@ pub fn input(prompt: &str) -> Result<String, Error> {
     let mut stdin = stdin();
     let mut stdout = stdout();
 
-    try!(stdout.color(color::Green));
-    print!("[?] ");
-    try!(stdout.reset());
-    print!("{} ", prompt);
+    try!(write!(stdout, "{}[?] {}{} ", color::Fg(color::Green), style::Reset, prompt));
 
     try!(stdout.lock().flush());
 

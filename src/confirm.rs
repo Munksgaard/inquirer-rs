@@ -1,5 +1,9 @@
 use std::io::{Write, stdout, stdin};
-use termion::{TermRead, TermWrite, IntoRawMode, color, Key};
+
+use termion::event::Key;
+use termion::input::TermRead;
+use termion::raw::IntoRawMode;
+use termion::{color, style};
 
 use error::Error;
 
@@ -31,18 +35,21 @@ use error::Error;
 /// ```
 pub fn confirm(prompt: &str, default: bool) -> Result<bool, Error> {
     let stdin = stdin();
-    let mut stdout = try!(stdout().into_raw_mode());
-
-    try!(stdout.color(color::Green));
-    print!("[?] ");
-    try!(stdout.reset());
-    print!("{} ", prompt);
     let (y, n) = if default {
         ('Y', 'n')
     } else {
         ('y', 'N')
     };
-    print!("({}/{}) ", y, n);
+
+    let mut stdout = try!(stdout().into_raw_mode());
+
+    try!(write!(stdout,
+           "{}[?] {}{} ({}/{}) ",
+           color::Fg(color::Green),
+           style::Reset,
+           prompt,
+           y,
+           n));
 
     try!(stdout.lock().flush());
 
@@ -65,7 +72,7 @@ pub fn confirm(prompt: &str, default: bool) -> Result<bool, Error> {
                 break;
             }
             Key::Ctrl('c') => {
-                print!("\n\r");
+                try!(write!(stdout, "\n\r"));
                 return Err(Error::UserAborted);
             }
             _ => {
@@ -74,6 +81,6 @@ pub fn confirm(prompt: &str, default: bool) -> Result<bool, Error> {
         }
     }
 
-    print!("\n\r");
+    try!(write!(stdout, "\n\r"));
     Ok(result)
 }

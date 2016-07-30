@@ -1,5 +1,9 @@
 use std::io::{Write, stdout, stdin};
-use termion::{TermRead, TermWrite, IntoRawMode, color, Style, Key};
+
+use termion::event::Key;
+use termion::input::TermRead;
+use termion::raw::IntoRawMode;
+use termion::{clear, color, cursor, style};
 
 use choice::Choice;
 use error::Error;
@@ -58,15 +62,15 @@ pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error>
 {
     let stdin = stdin();
     let mut stdout = try!(stdout().into_raw_mode());
-    try!(stdout.hide_cursor());
-
-    try!(stdout.color(color::Green));
-    print!("[?] ");
-    try!(stdout.reset());
-    println!("{}", prompt);
+    try!(write!(stdout,
+           "{}{}[?] {}{}\n",
+           cursor::Hide,
+           color::Fg(color::Green),
+           style::Reset,
+           prompt));
 
     for _ in 0..choices.len() - 1 {
-        println!("");
+        try!(write!(stdout, "\n"));
     }
 
     let mut cur: usize = 0;
@@ -74,17 +78,14 @@ pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error>
     let mut input = stdin.keys();
 
     loop {
-        try!(stdout.move_cursor_up(choices.len() as u32));
+        print!("{}", cursor::Up(choices.len() as u16));
         for (i, s) in choices.iter().enumerate() {
-            print!("\n\r");
-            try!(stdout.clear_line());
+            try!(write!(stdout, "\n\r{}", clear::CurrentLine));
 
             if cur == i {
-                try!(stdout.style(Style::Bold));
-                print!("  > {}", s.text());
-                try!(stdout.reset());
+                try!(write!(stdout, "{}  > {}{}", style::Bold, s.text(), style::Reset));
             } else {
-                print!("    {}", s.text());
+                try!(write!(stdout, "    {}", s.text()));
             }
         }
 
@@ -104,8 +105,7 @@ pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error>
                 cur += 1;
             }
             Key::Ctrl('c') => {
-                print!("\n\r");
-                try!(stdout.show_cursor());
+                try!(write!(stdout, "\n\r{}", cursor::Show));
                 return Err(Error::UserAborted);
             }
             _ => {
@@ -114,8 +114,7 @@ pub fn list<'c, C, V>(prompt: &str, choices: &'c [C]) -> Result<&'c V, Error>
         }
     }
 
-    print!("\n\r");
-    try!(stdout.show_cursor());
+    try!(write!(stdout, "\n\r{}", cursor::Show));
 
     choices.get(cur)
         .ok_or_else(|| Error::InvalidChoice(cur))

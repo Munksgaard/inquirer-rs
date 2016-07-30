@@ -8,4 +8,4 @@ readme = "README.md"
 
 [dependencies]
 quick-error = "1.1.0"
-termion = { git = "https://github.com/ticki/termion" }
+termion = "1.0.4"
