@@ -11,14 +11,6 @@ quick_error! {
             display("I/O error")
             description(err.description())
         }
-        /// Input read error
-        // `std::io::CharsError` is unstable!
-        Chars(err: io::CharsError) {
-            from()
-            cause(err)
-            display("Chars error")
-            description(err.description())
-        }
         /// Invalid choice
         // TODO: Make this a type system error instead
         InvalidChoice(option_num: usize) {
